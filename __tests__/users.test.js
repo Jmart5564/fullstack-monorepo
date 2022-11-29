@@ -1,8 +1,8 @@
-const pool = require('../lib/utils/pool');
+const pool = require('../server/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
-const app = require('../lib/app');
-const UserService = require('../lib/services/UserService');
+const app = require('../server/app');
+const UserService = require('../server/services/UserService');
 
 const mockUser = {
   email: 'test@example.com',
