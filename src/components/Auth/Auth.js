@@ -4,7 +4,6 @@ import React from 'react';
 // import { UserContext } from '../../context/UserContext.js';
 // import { authUser } from '../../services/auth.js';
 
-
 // export default function Auth() {
 //   const { type } = useParams();
 //   const [email, setEmail] = useState('');
@@ -44,6 +43,9 @@ import React from 'react';
 
 export default function Auth() {
   return (
-    <h1>hello you made it!</h1>
+    <div>
+      <h1>hello you made it!</h1>
+      <h2>yay!!</h2>
+    </div>
   );
 }
