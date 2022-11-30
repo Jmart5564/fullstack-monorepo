@@ -1,6 +1,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
-
+const cors = require('cors');
 // const authenticate = require('./middleware/authenticate');
 
 const app = express();
@@ -10,6 +10,12 @@ app.use(express.json());
 app.use(cookieParser());
 
 // App routes
+app.use(
+  cors({
+    origin: ['http://localhost:7890'],
+    credentials: true,
+  })
+);
 app.use('/api/v1/users', require('./controllers/users'));
 
 // Error handling & 404 middleware for when

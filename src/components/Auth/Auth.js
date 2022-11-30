@@ -18,6 +18,8 @@ export default function Auth() {
     setPassword('');
   };
 
+  console.log('user', user);
+
   if (user) {
     navigate('/home');
   }
