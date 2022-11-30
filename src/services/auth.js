@@ -2,6 +2,16 @@ import { get, post } from './request.js';
 
 const URL = '/api/v1/users';
 
+export async function authUser(email, password, type) {
+  let response;
+  if (type === 'sign-up') {
+    response = await post(`${URL}`, email, password);
+  } else {
+    response = await post(`${URL}/sessions`, email, password);
+  }
+  return response.user;
+}
+
 export async function signUpUser(credentials) {
   const response = await post(`${URL}`, credentials);
   response.user = response.data;
@@ -14,7 +24,7 @@ export async function signInUser(credentials) {
   return response;
 }
 
-export async function verifyUser() {
+export async function getUser() {
   const response = await get(`${URL}/me`);
   response.user = response.data;
   return response;
