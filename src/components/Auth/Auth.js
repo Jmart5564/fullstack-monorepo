@@ -14,7 +14,7 @@ export default function Auth() {
 
   const submitAuth = async () => {
     if (email === '') {
-      alert('Please type in email');
+      alert('Please provide email');
       return;
     }
     if (password === '') {
@@ -28,33 +28,46 @@ export default function Auth() {
     navigate('/home');
   };
 
-  console.log('user', user, !!user);
-  console.log('type', type);
-
   useEffect(() => {
     if (user) {
       navigate('/home');
     }
   }, []);
+  console.log('authuser', user);
 
   return (
-    <AuthDiv>
-      <div>
-        <Link to="/auth/sign-in">Sign In</Link>
-        <Link to="/auth/sign-up">Sign Up</Link>
-      </div>
-      <div>
-        <label>Email:</label>
-        <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </div>
-      <button onClick={submitAuth}>Submit</button>
-    </AuthDiv>
+    <AuthPageDiv>
+      <AuthDiv>
+        <div>
+          <Link to="/auth/sign-in">Sign In</Link>
+          <Link to="/auth/sign-up">Sign Up</Link>
+        </div>
+        <div>
+          <label>Email:</label>
+          <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <button onClick={submitAuth}>Submit</button>
+      </AuthDiv>
+    </AuthPageDiv>
   );
 }
+
+const AuthPageDiv = styled.div`
+  height: 100vh;
+  width: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  align-self: center;
+  justify-items: center;
+  justify-content: center;
+  text-align: center;
+`;
 
 const AuthDiv = styled.div`
   display: flex;
@@ -65,6 +78,25 @@ const AuthDiv = styled.div`
   justify-items: center;
   justify-content: center;
   text-align: center;
+  border: 1px solid black;
+  width: 30vh;
+  height: 30vh;
+  gap: 20px;
+  a:link {
+    text-decoration: none;
+    padding: 15px 15px;
+  }
+  a:visited {
+    color: black;
+  }
+  a:hover {
+    font-size: 20px;
+  }
+  a.active {
+    font-size: 25px;
+    text-decoration: underline;
+    font-weight: 500;
+  }
   input {
     width: 200px;
     height: 15px;
