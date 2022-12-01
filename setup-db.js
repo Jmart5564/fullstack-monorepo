@@ -1,5 +1,5 @@
-const pool = require('./server/utils/pool');
-const setup = require('./data/setup');
+import pool from './server/utils/pool';
+import setup from './data/setup';
 
 setup(pool)
   .catch((err) => console.error(err))

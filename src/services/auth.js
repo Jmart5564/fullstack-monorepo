@@ -1,52 +1,74 @@
-import { get, post } from './request.js';
+// import { post } from './request.js';
+// import { useNavigate } from 'react-router-dom';
 
-const URL = '/api/v1/users';
+const BASE_URL = 'http://localhost:7890';
 
-export async function authUser(email, password, type) {
+export async function authUser({ email, password, type }) {
   let response;
   if (type === 'sign-up') {
-    response = await post(`${URL}`, email, password);
-  } else {
-    response = await post(`${URL}/sessions`, email, password);
+    response = await fetch(`${BASE_URL}/api/v1/users`, {
+      method: 'POST',
+      credentials: 'include',
+      mode: 'cors',
+      body: JSON.stringify({
+        email,
+        password,
+        type,
+      }),
+      headers: {
+        'Content-type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+  } else if (type === 'sign-in') {
+    response = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
+      method: 'POST',
+      credentials: 'include',
+      mode: 'cors',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers: {
+        'Content-type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+
+    return response.user;
   }
-  return response.user;
-}
-
-export async function signUpUser(credentials) {
-  const response = await post(`${URL}`, credentials);
-  response.user = response.data;
-  return response;
-}
-
-export async function signInUser(credentials) {
-  const response = await post(`${URL}/sessions`, credentials);
-  response.user = response.data;
-  return response;
 }
 
 export async function getUser() {
-  const response = await get(`${URL}/me`);
-  response.user = response.data;
-  return response;
-}
-
-const USER_KEY = 'USER';
-
-export function storeLocalUser(user) {
-  if (user) {
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
-  } else {
-    localStorage.removeItem(USER_KEY);
-  }
-}
-
-export function getLocalUser() {
-  const json = localStorage.getItem(USER_KEY);
   try {
-    if (json) {
-      return JSON.parse(json);
+    const resp = await fetch(`${BASE_URL}/api/v1/users/me`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+    if (resp.ok) {
+      return resp;
+    } else {
+      throw new Error();
     }
   } catch (e) {
-    storeLocalUser();
+    return null;
   }
 }
+
+// export async function CheckAuth() {
+//   navigate = useNavigate();
+//   const user = await getUser();
+
+//   if (!user) location.replace('../auth');
+// }
+
+// export async function RedirectIfLoggedIn() {
+//   navigate = useNavigate();
+//   if (await getUser()) {
+//     navigate('/home');
+//   }
+// }

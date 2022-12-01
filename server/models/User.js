@@ -1,6 +1,6 @@
-const pool = require('../utils/pool');
+import pool from '../utils/pool.js';
 
-module.exports = class User {
+export default class User {
   id;
   email;
   #passwordHash; // private class field: hides it from anything outside of this class definition
@@ -60,4 +60,4 @@ module.exports = class User {
   get passwordHash() {
     return this.#passwordHash;
   }
-};
+}

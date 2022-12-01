@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-module.exports = async (req, res, next) => {
+export default async (req, res, next) => {
   try {
     const cookie = req.cookies[process.env.COOKIE_NAME];
 

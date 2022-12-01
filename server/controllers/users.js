@@ -1,10 +1,10 @@
-const { Router } = require('express');
-const authenticate = require('../middleware/authenticate');
-const UserService = require('../services/UserService');
+import { Router } from 'express';
+import authenticate from '../middleware/authenticate.js';
+import UserService from '../services/UserService.js';
 
 const ONE_DAY_IN_MS = 1000 * 60 * 60 * 24;
 
-module.exports = Router()
+export default Router()
   .post('/', async (req, res, next) => {
     try {
       const user = await UserService.create(req.body);

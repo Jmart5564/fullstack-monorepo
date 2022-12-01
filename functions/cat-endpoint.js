@@ -1,5 +1,7 @@
-const fetch = require('node-fetch');
-require('dotenv').config();
+// const fetch = require('node-fetch');
+import fetch from 'node-fetch';
+// require('dotenv').config();
+import dotenv from 'dotenv';
 
 const headers = {
   'Access-Control-Allow-Origin': '*',

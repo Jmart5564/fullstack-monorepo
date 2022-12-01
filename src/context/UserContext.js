@@ -1,13 +1,24 @@
 import React from 'react';
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import { getUser } from '../services/auth.js';
 
 const UserContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 const UserProvider = ({ children }) => {
-  const currentUser = getUser();
-  const [user, setUser] = useState(currentUser);
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    async function fetchUser() {
+      const data = await getUser();
+      console.log('data', data);
+      if (data === null) {
+        setUser(null);
+      } else {
+        setUser(data);
+      }
+    }
+    fetchUser();
+  }, []);
 
   return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
 };

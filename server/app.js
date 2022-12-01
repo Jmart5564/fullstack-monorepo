@@ -1,7 +1,10 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 // const authenticate = require('./middleware/authenticate');
+import users from './controllers/users.js';
+import notFound from './middleware/not-found.js';
+import error from './middleware/error.js';
 
 const app = express();
 
@@ -12,15 +15,15 @@ app.use(cookieParser());
 // App routes
 app.use(
   cors({
-    origin: ['http://localhost:7890'],
+    origin: ['http://localhost:7891'],
     credentials: true,
   })
 );
-app.use('/api/v1/users', require('./controllers/users'));
+app.use('/api/v1/users', users);
 
 // Error handling & 404 middleware for when
 // a request doesn't match any app routes
-app.use(require('./middleware/not-found'));
-app.use(require('./middleware/error'));
+app.use(notFound);
+app.use(error);
 
-module.exports = app;
+export default app;
