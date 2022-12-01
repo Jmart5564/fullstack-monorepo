@@ -59,16 +59,19 @@ export async function getUser() {
   }
 }
 
-// export async function CheckAuth() {
-//   navigate = useNavigate();
-//   const user = await getUser();
-
-//   if (!user) location.replace('../auth');
-// }
-
-// export async function RedirectIfLoggedIn() {
-//   navigate = useNavigate();
-//   if (await getUser()) {
-//     navigate('/home');
-//   }
-// }
+export async function logout() {
+  const resp = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    mode: 'cors',
+  });
+  if (resp.ok) {
+    location.replace('../auth');
+  } else {
+    throw new Error('Unable to logout');
+  }
+}
