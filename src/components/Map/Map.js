@@ -3,8 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import mapboxgl from '!mapbox-gl';
 import styled from 'styled-components';
 import React from 'react';
-mapboxgl.accessToken =
-  'pk.eyJ1Ijoiam1hcnQ1NTY0IiwiYSI6ImNsOXlpeGo0cTA1YTYzdnFsajZrOG5ydzYifQ.14ktYavQPuEPRYvQGp0YCQ';
+mapboxgl.accessToken = process.env.REACT_APP_MAP_ACCESS_TOKEN;
 
 export default function MapComponent() {
   const mapContainer = useRef(null);

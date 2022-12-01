@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext.js';
 import { authUser } from '../../services/auth.js';
@@ -13,6 +13,14 @@ export default function Auth() {
   const { user, setUser } = useContext(UserContext);
 
   const submitAuth = async () => {
+    if (email === '') {
+      alert('Please type in email');
+      return;
+    }
+    if (password === '') {
+      alert('please provide password');
+      return;
+    }
     const userResponse = await authUser({ email, password, type });
     setUser(userResponse);
     setEmail('');
@@ -23,9 +31,11 @@ export default function Auth() {
   console.log('user', user, !!user);
   console.log('type', type);
 
-  if (user) {
-    navigate('/home');
-  }
+  useEffect(() => {
+    if (user) {
+      navigate('/home');
+    }
+  }, []);
 
   return (
     <AuthDiv>
