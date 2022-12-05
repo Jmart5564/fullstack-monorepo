@@ -1,7 +1,10 @@
 // const fs = require('fs').promises;
-import fs from 'fs';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import url from 'node:url';
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
-module.exports = (pool) => {
+export default function (pool) {
   return fs
     .readFile(`${__dirname}/../sql/setup.sql`, { encoding: 'utf-8' })
     .then((sql) => pool.query(sql))
@@ -22,4 +25,4 @@ module.exports = (pool) => {
         console.error('❌ Error: ' + error.message);
       }
     });
-};
+}
