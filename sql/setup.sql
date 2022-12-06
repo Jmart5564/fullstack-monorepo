@@ -14,8 +14,8 @@ CREATE TABLE users (
 CREATE TABLE locations (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   user_id BIGINT,
-  latitude VARCHAR NOT NULL,
-  longitude VARCHAR NOT NULL,
+  latitude DECIMAL(18,4),
+  longitude DECIMAL(18,4),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   FOREIGN KEY (user_id) REFERENCES users(id)
 );

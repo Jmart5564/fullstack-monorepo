@@ -41,13 +41,13 @@ describe('locations', () => {
 
   it('POST /api/v1/locations creates a location data with the current user', async () => {
     const [agent, user] = await registerAndLogin();
-    const newItem = { latitude: 45.5152, longitude: 122.6784 };
-    const resp = await agent.post('/api/v1/locations').send(newItem);
+    const newLocation = { latitude: '45.5152', longitude: '122.6784' };
+    const resp = await agent.post('/api/v1/locations').send(newLocation);
     expect(resp.status).toEqual(200);
     expect(resp.body).toEqual({
       id: expect.any(String),
-      latitude: newItem.latitude,
-      longitude: newItem.longitude,
+      latitude: newLocation.latitude,
+      longitude: newLocation.longitude,
       user_id: user.id,
     });
   });
