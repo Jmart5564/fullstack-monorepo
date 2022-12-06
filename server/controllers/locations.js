@@ -20,6 +20,14 @@ export default Router()
       next(e);
     }
   })
+  .put('/:id', [authenticate, authorize], async (req, res, next) => {
+    try {
+      const updatedLocation = await Location.updateById(req.params.id, req.body);
+      res.json(updatedLocation);
+    } catch (e) {
+      next(e);
+    }
+  })
   .delete('/:id', [authenticate, authorize], async (req, res, next) => {
     try {
       const deletedLocation = await Location.delete(req.params.id);

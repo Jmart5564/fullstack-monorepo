@@ -77,6 +77,38 @@ describe('locations', () => {
     expect(resp.status).toEqual(401);
   });
 
+  it('UPDATE /api/v1/locations/:id should update an location', async () => {
+    // create a user
+    const [agent, user] = await registerAndLogin();
+    const location = await Location.insert({
+      latitude: 44.2456,
+      longitude: 126.8735,
+      user_id: user.id,
+    });
+    const resp = await agent.put(`/api/v1/locations/${location.id}`).send({ latitude: '41.2356' });
+    expect(resp.status).toBe(200);
+    expect(resp.body).toEqual({
+      id: location.id,
+      latitude: '41.2356',
+      longitude: '126.8735',
+      user_id: user.id,
+    });
+  });
+
+  it('UPDATE /api/v1/locations/:id should 403 for invalid users', async () => {
+    // create a user
+    const [agent] = await registerAndLogin();
+    // create a second user
+    const user2 = await UserService.create(mockUser2);
+    const location = await Location.insert({
+      latitude: 44.2456,
+      longitude: 126.8735,
+      user_id: user2.id,
+    });
+    const resp = await agent.put(`/api/v1/locations/${location.id}`).send({ latitude: 40.2845 });
+    expect(resp.status).toBe(403);
+  });
+
   it('DELETE /api/v1/locations/:id should delete locations for valid user', async () => {
     const [agent, user] = await registerAndLogin();
     const location = await Location.insert({

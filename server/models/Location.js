@@ -49,6 +49,20 @@ export default class Location {
     return new Location(rows[0]);
   }
 
+  static async updateById(id, attrs) {
+    const location = await Location.getById(id);
+    if (!location) return null;
+    const { latitude, longitude } = { ...location, ...attrs };
+    const { rows } = await pool.query(
+      `
+      UPDATE locations 
+      SET latitude=$2, longitude=$3 
+      WHERE id=$1 RETURNING *`,
+      [id, latitude, longitude]
+    );
+    return new Location(rows[0]);
+  }
+
   static async delete(id) {
     const { rows } = await pool.query('DELETE FROM locations WHERE id = $1 RETURNING *', [id]);
     return new Location(rows[0]);
