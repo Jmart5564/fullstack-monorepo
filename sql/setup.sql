@@ -27,6 +27,7 @@ CREATE TABLE journals (
   elevation INT,
   species VARCHAR,
   details VARCHAR,
+  image_url VARCHAR,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   FOREIGN KEY (location_id) REFERENCES locations(id)
 );

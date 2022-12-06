@@ -1,9 +1,9 @@
-const pool = require('../server/utils/pool');
-const setup = require('../data/setup');
-const request = require('supertest');
-const app = require('../server/app');
-const UserService = require('../server/services/UserService');
-import Location from '../server/models/Location';
+import pool from '../server/utils/pool.js';
+import setup from '../data/setup.js';
+import request from 'supertest';
+import app from '../server/app.js';
+import UserService from '../server/services/UserService.js';
+import Location from '../server/models/Location.js';
 
 const mockUser = {
   firstName: 'momo',
@@ -38,9 +38,7 @@ describe('locations', () => {
   beforeEach(() => {
     return setup(pool);
   });
-  afterAll(() => {
-    pool.end();
-  });
+
   it('POST /api/v1/locations creates a location data with the current user', async () => {
     const [agent, user] = await registerAndLogin();
     const newItem = { latitude: 45.5152, longitude: 122.6784 };

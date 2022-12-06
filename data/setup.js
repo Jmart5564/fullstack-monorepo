@@ -1,12 +1,12 @@
 // const fs = require('fs').promises;
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import url from 'node:url';
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+// import url from 'node:url';
+// const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 export default function (pool) {
   return fs
-    .readFile(`${__dirname}/../sql/setup.sql`, { encoding: 'utf-8' })
+    .readFile(path.resolve(`./sql/setup.sql`), { encoding: 'utf-8' })
     .then((sql) => pool.query(sql))
     .then(() => {
       if (process.env.NODE_ENV !== 'test') {

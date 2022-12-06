@@ -1,8 +1,8 @@
-const pool = require('../server/utils/pool');
-const setup = require('../data/setup');
-const request = require('supertest');
-const app = require('../server/app');
-const UserService = require('../server/services/UserService');
+import pool from '../server/utils/pool.js';
+import setup from '../data/setup.js';
+import request from 'supertest';
+import app from '../server/app.js';
+import UserService from '../server/services/UserService.js';
 
 const mockUser = {
   email: 'test@example.com',
@@ -28,10 +28,6 @@ const registerAndLogin = async (userProps = {}) => {
 describe('users', () => {
   beforeEach(() => {
     return setup(pool);
-  });
-
-  afterAll(() => {
-    pool.end();
   });
 
   it('creates a new user', async () => {
