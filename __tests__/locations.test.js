@@ -71,4 +71,23 @@ describe('locations', () => {
     expect(resp.status).toEqual(200);
     expect(resp.body).toEqual([user1Location]);
   });
+
+  it('GET /api/v1/locations should return a 401 if not authenticated', async () => {
+    const resp = await request(app).get('/api/v1/locations');
+    expect(resp.status).toEqual(401);
+  });
+
+  it('DELETE /api/v1/locations/:id should delete locations for valid user', async () => {
+    const [agent, user] = await registerAndLogin();
+    const location = await Location.insert({
+      latitude: 44.2456,
+      longitude: 126.8735,
+      user_id: user.id,
+    });
+    const resp = await agent.delete(`/api/v1/locations/${location.id}`);
+    expect(resp.status).toBe(200);
+
+    const check = await Location.getById(location.id);
+    expect(check).toBeNull();
+  });
 });
