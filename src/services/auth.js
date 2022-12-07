@@ -20,6 +20,8 @@ export async function authUser({ email, password, type }) {
         Accept: 'application/json',
       },
     });
+    const resp = await response.json();
+    return resp;
   } else if (type === 'sign-in') {
     response = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
       method: 'POST',
@@ -34,8 +36,8 @@ export async function authUser({ email, password, type }) {
         Accept: 'application/json',
       },
     });
-
-    return response.user;
+    const resp = await response.json();
+    return resp;
   }
 }
 

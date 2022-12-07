@@ -31,6 +31,39 @@ export default function MapComponent() {
     });
   });
 
+  // useEffect(() => {
+  //   map.addControl(
+  //     new mapboxgl.GeolocateControl({
+  //       positionOptions: {
+  //         enableHighAccuracy: true,
+  //       },
+  //       // When active the map will receive updates to the device's location as it changes.
+  //       trackUserLocation: true,
+  //       // Draw an arrow next to the location dot to indicate which direction the device is heading.
+  //       showUserHeading: true,
+  //     })
+  //   );
+  // });
+
+  // const mapClick = (e) => {
+  //   const coordinates = e.lngLat;
+
+  //   new mapboxgl.Popup()
+  //     .setHTML('you clicked here: <br/>' + coordinates)
+  //     .setLngLat(coordinates)
+  //     .addTo(map);
+  // };
+
+  // map.on('style.load', () => {
+  //   map.on('click', (e) => {
+  //     const coordinates = e.lngLat;
+  //     new mapboxgl.Popup()
+  //       .setLngLat(coordinates)
+  //       .setHTML('you clicked here: <br/>' + coordinates)
+  //       .addTo(map);
+  //   });
+  // });
+
   return (
     <MapDiv>
       <div className="sidebar">
