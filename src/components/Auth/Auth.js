@@ -10,6 +10,7 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { loading } = useContext(UserContext);
   const { user, setUser } = useContext(UserContext);
 
   const submitAuth = async () => {
@@ -29,10 +30,10 @@ export default function Auth() {
   };
 
   useEffect(() => {
-    if (user) {
+    if (!loading && user) {
       navigate('/home');
     }
-  }, []);
+  }, [loading]);
 
   return (
     <AuthPageDiv>
