@@ -52,7 +52,7 @@ export async function getUser() {
       credentials: 'include',
     });
     if (resp.ok) {
-      return resp;
+      return await resp.json();
     } else {
       throw new Error();
     }

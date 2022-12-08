@@ -22,7 +22,6 @@ export default function Auth() {
       return;
     }
     const userResponse = await authUser({ email, password, type });
-    console.log('userresp', userResponse);
     setUser(userResponse);
     setEmail('');
     setPassword('');
@@ -34,7 +33,6 @@ export default function Auth() {
       navigate('/home');
     }
   }, []);
-  console.log('authuser', user);
 
   return (
     <AuthPageDiv>
