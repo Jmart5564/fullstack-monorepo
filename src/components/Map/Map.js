@@ -4,11 +4,11 @@ import Map, {
   NavigationControl,
   FullscreenControl,
   ScaleControl,
+  GeolocateControl,
 } from 'react-map-gl';
 import React, { useState, useEffect, useMemo } from 'react';
 // import mapboxgl from '!mapbox-gl';
 import styled from 'styled-components';
-// const mapToken = process.env.REACT_APP_MAP_ACCESS_TOKEN;
 import testData from '../../cities.json';
 
 export default function MapComponent() {
@@ -20,7 +20,6 @@ export default function MapComponent() {
     zoom: 10,
   });
   const [selectedPin, setSelectedPin] = useState(null);
-  const [popupInfo, setPopupInfo] = useState(null);
   useEffect(() => {
     const listener = (e) => {
       if (e.key === 'Escape') {
@@ -46,7 +45,7 @@ export default function MapComponent() {
             // If we let the click event propagates to the map, it will immediately close the popup
             // with `closeOnClick: true`
             e.originalEvent.stopPropagation();
-            setPopupInfo(city);
+            setSelectedPin(city);
           }}
         >
           <MushImg src="/mushroom.svg" alt="Mushroom Icon" />
@@ -61,63 +60,36 @@ export default function MapComponent() {
         {...viewport}
         mapboxAccessToken={process.env.REACT_APP_MAP_ACCESS_TOKEN}
         mapStyle="mapbox://styles/jmart5564/cla77df0d001n15oy0bcrhmzp"
-        onViewportChange={(viewport) => {
+        onMove={(viewport) => {
           setViewport(viewport);
         }}
       >
+        <GeolocateControl position="top-left" />
         <NavigationControl position="top-left" />
         <FullscreenControl position="top-left" />
         <ScaleControl />
 
         {pins}
 
-        {popupInfo && (
+        {selectedPin && (
           <Popup
             anchor="top"
-            longitude={Number(popupInfo.longitude)}
-            latitude={Number(popupInfo.latitude)}
-            onClose={() => setPopupInfo(null)}
+            longitude={Number(selectedPin.longitude)}
+            latitude={Number(selectedPin.latitude)}
+            onClose={() => setSelectedPin(null)}
           >
             <div>
-              {popupInfo.city}, {popupInfo.state} |{' '}
+              {selectedPin.city}, {selectedPin.state} |{' '}
               <a
                 target="_new"
-                href={`http://en.wikipedia.org/w/index.php?title=Special:Search&search=${popupInfo.city}, ${popupInfo.state}`}
+                href={`http://en.wikipedia.org/w/index.php?title=Special:Search&search=${selectedPin.city}, ${selectedPin.state}`}
               >
                 Wikipedia
               </a>
             </div>
-            <img width="100%" src={popupInfo.image} />
+            <img width="100%" src={selectedPin.image} />
           </Popup>
         )}
-        {/* {testData.map((data) => (
-          <Marker key={data.id} latitude={data.latitude} longitude={data.longitude}>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                setSelectedPin(data);
-              }}
-            >
-              <img src="/mushroom.svg" alt="Mushroom Icon" />
-            </button>
-          </Marker>
-        ))} */}
-
-        {selectedPin ? (
-          <Popup
-            latitude={selectedPin.latitude}
-            longitude={selectedPin.longitude}
-            onClose={() => {
-              setSelectedPin(null);
-            }}
-          >
-            <div>
-              <h2>{selectedPin.city}</h2>
-              <h2>{selectedPin.state}</h2>
-              <h3>{selectedPin.population}</h3>
-            </div>
-          </Popup>
-        ) : null}
       </Map>
     </MapDiv>
   );
@@ -162,8 +134,8 @@ export default function MapComponent() {
 const MapDiv = styled.div`
   height: 100vh;
   button {
-    width: 70px;
-    height: 70px;
+    width: 40px;
+    height: 40px;
     img {
       height: 50px;
       width: 50px;
