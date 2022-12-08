@@ -7,9 +7,8 @@ import Map, {
   GeolocateControl,
 } from 'react-map-gl';
 import React, { useState, useEffect, useMemo } from 'react';
-// import mapboxgl from '!mapbox-gl';
 import styled from 'styled-components';
-import testData from '../../cities.json';
+import { useLocations } from '../../hooks/useLocations.js';
 
 export default function MapComponent() {
   const [viewport, setViewport] = useState({
@@ -20,6 +19,8 @@ export default function MapComponent() {
     zoom: 10,
   });
   const [selectedPin, setSelectedPin] = useState(null);
+  const { locations } = useLocations();
+
   useEffect(() => {
     const listener = (e) => {
       if (e.key === 'Escape') {
@@ -35,17 +36,17 @@ export default function MapComponent() {
 
   const pins = useMemo(
     () =>
-      testData.map((city, index) => (
+      locations.map((location) => (
         <Marker
-          key={`marker-${index}`}
-          longitude={city.longitude}
-          latitude={city.latitude}
+          key={location.id}
+          longitude={location.longitude}
+          latitude={location.latitude}
           anchor="bottom"
           onClick={(e) => {
             // If we let the click event propagates to the map, it will immediately close the popup
             // with `closeOnClick: true`
             e.originalEvent.stopPropagation();
-            setSelectedPin(city);
+            setSelectedPin(location);
           }}
         >
           <MushImg src="/mushroom.svg" alt="Mushroom Icon" />
@@ -54,6 +55,8 @@ export default function MapComponent() {
     []
   );
 
+  // TODO Fix Error: Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate. React limits the number of nested updates to prevent infinite loops
+  // TODO Map Crashes when I ask for location. Shows location for a second first
   return (
     <MapDiv>
       <Map
@@ -64,7 +67,11 @@ export default function MapComponent() {
           setViewport(viewport);
         }}
       >
-        <GeolocateControl position="top-left" />
+        <GeolocateControl
+          positionOptions={{ enableHighAccuracy: true }}
+          trackUserLocation={true}
+          position="top-left"
+        />
         <NavigationControl position="top-left" />
         <FullscreenControl position="top-left" />
         <ScaleControl />
@@ -94,42 +101,6 @@ export default function MapComponent() {
     </MapDiv>
   );
 }
-
-// export default function MapComponent() {
-//   const mapContainer = useRef(null);
-//   const map = useRef(null);
-//   const [lng, setLng] = useState(-122.9);
-//   const [lat, setLat] = useState(45.35);
-//   const [zoom, setZoom] = useState(9);
-
-//   useEffect(() => {
-//     if (map.current) return; // initialize map only once
-//     map.current = new mapboxgl.Map({
-//       container: mapContainer.current,
-//       style: 'mapbox://styles/jmart5564/cla77df0d001n15oy0bcrhmzp',
-//       center: [lng, lat],
-//       zoom,
-//     });
-//   });
-
-//   useEffect(() => {
-//     if (!map.current) return; // wait for map to initialize
-//     map.current.on('move', () => {
-//       setLng(map.current.getCenter().lng.toFixed(4));
-//       setLat(map.current.getCenter().lat.toFixed(4));
-//       setZoom(map.current.getZoom().toFixed(2));
-//     });
-//   });
-
-//   return (
-//     <MapDiv>
-//       <div className="sidebar">
-//         Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-//       </div>
-//       <MapDiv ref={mapContainer} className="map-container" />
-//     </MapDiv>
-//   );
-// }
 
 const MapDiv = styled.div`
   height: 100vh;
