@@ -3,6 +3,7 @@ import { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentUser, UserContext } from '../../context/UserContext.js';
 import MapComponent from '../Map/Map.js';
+import Header from './Header.js';
 import styled from 'styled-components';
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
 
   return (
     <MapDiv>
+      <Header />
       <MapComponent />
     </MapDiv>
   );

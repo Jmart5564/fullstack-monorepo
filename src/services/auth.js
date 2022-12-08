@@ -83,7 +83,7 @@ export async function logout() {
     mode: 'cors',
   });
   if (resp.ok) {
-    location.replace('../auth');
+    location.replace('/auth/sign-in');
   } else {
     throw new Error('Unable to logout');
   }
