@@ -21,7 +21,11 @@ export async function authUser({ email, password, type }) {
       },
     });
     const resp = await response.json();
-    return resp;
+    if (resp.ok) {
+      return await resp.json();
+    } else {
+      throw new Error();
+    }
   } else if (type === 'sign-in') {
     response = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
       method: 'POST',
@@ -37,7 +41,11 @@ export async function authUser({ email, password, type }) {
       },
     });
     const resp = await response.json();
-    return resp;
+    if (resp.ok) {
+      return await resp.json();
+    } else {
+      throw new Error();
+    }
   }
 }
 
