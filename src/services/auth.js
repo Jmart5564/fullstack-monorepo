@@ -1,7 +1,7 @@
-// import { post } from './request.js';
-// import { useNavigate } from 'react-router-dom';
-
 const BASE_URL = 'http://localhost:7890';
+
+// TODO fix user sign up with duplicate email
+// TODO fix user can still access home page with wrong password
 
 export async function authUser({ email, password, type }) {
   let response;
@@ -21,11 +21,13 @@ export async function authUser({ email, password, type }) {
       },
     });
     const resp = await response.json();
-    if (resp.ok) {
-      return await resp.json();
-    } else {
-      throw new Error();
-    }
+    return resp;
+    // if (resp.ok) {
+    //   console.log('working');
+    //   return await resp.json();
+    // } else {
+    //   throw new Error('this email already has an account');
+    // }
   } else if (type === 'sign-in') {
     response = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
       method: 'POST',
@@ -41,11 +43,12 @@ export async function authUser({ email, password, type }) {
       },
     });
     const resp = await response.json();
-    if (resp.ok) {
-      return await resp.json();
-    } else {
-      throw new Error();
-    }
+    return resp;
+    // if (resp.ok) {
+    //   return await resp.json();
+    // } else {
+    //   throw new Error();
+    // }
   }
 }
 

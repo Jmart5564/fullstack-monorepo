@@ -30,7 +30,7 @@ describe('users', () => {
     return setup(pool);
   });
 
-  it('creates a new user', async () => {
+  it('POST /api/v1/users creates a new user', async () => {
     const res = await request(app).post('/api/v1/users').send(mockUser);
     const { email } = mockUser;
 
@@ -40,7 +40,7 @@ describe('users', () => {
     });
   });
 
-  it('returns the current user', async () => {
+  it('GET /api/v1/users/me returns the current user', async () => {
     const [agent, user] = await registerAndLogin();
     const me = await agent.get('/api/v1/users/me');
     expect(me.body).toEqual({
@@ -50,8 +50,10 @@ describe('users', () => {
     });
   });
 
-  it('DELETE /sessions deletes the user session', async () => {
+  it('DELETE /api/v1/users/sessions deletes the user session', async () => {
     const [agent] = await registerAndLogin();
+    const me = await agent.get('/api/v1/users/me');
+    expect(me.status).toBe(200);
     const resp = await agent.delete('/api/v1/users/sessions');
     expect(resp.status).toBe(204);
   });

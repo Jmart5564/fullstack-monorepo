@@ -77,7 +77,7 @@ describe('locations', () => {
     expect(resp.status).toEqual(401);
   });
 
-  it('UPDATE /api/v1/locations/:id should update an location', async () => {
+  it('PUT /api/v1/locations/:id should update a location', async () => {
     // create a user
     const [agent, user] = await registerAndLogin();
     const location = await Location.insert({
@@ -95,7 +95,7 @@ describe('locations', () => {
     });
   });
 
-  it('UPDATE /api/v1/locations/:id should 403 for invalid users', async () => {
+  it('PUT /api/v1/locations/:id should 403 for invalid users', async () => {
     // create a user
     const [agent] = await registerAndLogin();
     // create a second user
