@@ -5,6 +5,8 @@ import { UserContext } from '../../context/UserContext.js';
 import { authUser } from '../../services/auth.js';
 import styled from 'styled-components';
 
+// TODO Sign up does not give a cookie, only sign in
+
 export default function Auth() {
   const { type } = useParams();
   const [email, setEmail] = useState('');

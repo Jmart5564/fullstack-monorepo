@@ -1,11 +1,11 @@
-import ReactMapGL, {
+import Map, {
   Marker,
   Popup,
   NavigationControl,
   FullscreenControl,
   ScaleControl,
 } from 'react-map-gl';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 // import mapboxgl from '!mapbox-gl';
 import styled from 'styled-components';
 // const mapToken = process.env.REACT_APP_MAP_ACCESS_TOKEN;
@@ -20,6 +20,7 @@ export default function MapComponent() {
     zoom: 10,
   });
   const [selectedPin, setSelectedPin] = useState(null);
+  const [popupInfo, setPopupInfo] = useState(null);
   useEffect(() => {
     const listener = (e) => {
       if (e.key === 'Escape') {
@@ -33,9 +34,30 @@ export default function MapComponent() {
     };
   }, []);
 
+  const pins = useMemo(
+    () =>
+      testData.map((city, index) => (
+        <Marker
+          key={`marker-${index}`}
+          longitude={city.longitude}
+          latitude={city.latitude}
+          anchor="bottom"
+          onClick={(e) => {
+            // If we let the click event propagates to the map, it will immediately close the popup
+            // with `closeOnClick: true`
+            e.originalEvent.stopPropagation();
+            setPopupInfo(city);
+          }}
+        >
+          <MushImg src="/mushroom.svg" alt="Mushroom Icon" />
+        </Marker>
+      )),
+    []
+  );
+
   return (
     <MapDiv>
-      <ReactMapGL
+      <Map
         {...viewport}
         mapboxAccessToken={process.env.REACT_APP_MAP_ACCESS_TOKEN}
         mapStyle="mapbox://styles/jmart5564/cla77df0d001n15oy0bcrhmzp"
@@ -46,7 +68,29 @@ export default function MapComponent() {
         <NavigationControl position="top-left" />
         <FullscreenControl position="top-left" />
         <ScaleControl />
-        {testData.map((data) => (
+
+        {pins}
+
+        {popupInfo && (
+          <Popup
+            anchor="top"
+            longitude={Number(popupInfo.longitude)}
+            latitude={Number(popupInfo.latitude)}
+            onClose={() => setPopupInfo(null)}
+          >
+            <div>
+              {popupInfo.city}, {popupInfo.state} |{' '}
+              <a
+                target="_new"
+                href={`http://en.wikipedia.org/w/index.php?title=Special:Search&search=${popupInfo.city}, ${popupInfo.state}`}
+              >
+                Wikipedia
+              </a>
+            </div>
+            <img width="100%" src={popupInfo.image} />
+          </Popup>
+        )}
+        {/* {testData.map((data) => (
           <Marker key={data.id} latitude={data.latitude} longitude={data.longitude}>
             <button
               onClick={(e) => {
@@ -57,7 +101,7 @@ export default function MapComponent() {
               <img src="/mushroom.svg" alt="Mushroom Icon" />
             </button>
           </Marker>
-        ))}
+        ))} */}
 
         {selectedPin ? (
           <Popup
@@ -74,7 +118,7 @@ export default function MapComponent() {
             </div>
           </Popup>
         ) : null}
-      </ReactMapGL>
+      </Map>
     </MapDiv>
   );
 }
@@ -120,5 +164,15 @@ const MapDiv = styled.div`
   button {
     width: 70px;
     height: 70px;
+    img {
+      height: 50px;
+      width: 50px;
+    }
   }
+`;
+
+const MushImg = styled.img`
+  height: 50px;
+  width: 50px;
+  cursor: pointer;
 `;
