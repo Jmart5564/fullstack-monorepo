@@ -11,7 +11,7 @@ export async function getLocations() {
       credentials: 'include',
     });
     if (resp.ok) {
-      console.log('location', resp.status);
+      console.log('location', resp);
       return await resp.json();
     } else {
       throw new Error();
@@ -21,4 +21,4 @@ export async function getLocations() {
   }
 }
 
-// TODO pins only show up after I save
+// TODO pins only show up after I save a new aspect to console.log...start as empty array then populate

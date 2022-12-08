@@ -9,6 +9,7 @@ import Map, {
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useLocations } from '../../hooks/useLocations.js';
+// import { UserContext } from '../../context/UserContext.js';
 
 export default function MapComponent() {
   const [viewport, setViewport] = useState({
@@ -20,6 +21,9 @@ export default function MapComponent() {
   });
   const [selectedPin, setSelectedPin] = useState(null);
   const { locations } = useLocations();
+  // const { loading } = useContext(UserContext);
+
+  console.log('maplocaions', locations);
 
   useEffect(() => {
     const listener = (e) => {
