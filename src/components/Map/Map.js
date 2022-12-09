@@ -6,7 +6,7 @@ import Map, {
   ScaleControl,
   GeolocateControl,
 } from 'react-map-gl';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import { useLocations } from '../../hooks/useLocations.js';
 // import { UserContext } from '../../context/UserContext.js';
@@ -23,8 +23,6 @@ export default function MapComponent() {
   const { locations } = useLocations();
   // const { loading } = useContext(UserContext);
 
-  console.log('maplocaions', locations);
-
   useEffect(() => {
     const listener = (e) => {
       if (e.key === 'Escape') {
@@ -36,6 +34,13 @@ export default function MapComponent() {
     return () => {
       window.removeEventListener('keydown', listener);
     };
+  }, []);
+
+  const geolocateControlRef = useCallback((ref) => {
+    if (ref) {
+      // Activate as soon as the control is loaded
+      ref.trigger();
+    }
   }, []);
 
   const pins = useMemo(
@@ -56,24 +61,25 @@ export default function MapComponent() {
           <MushImg src="/mushroom.svg" alt="Mushroom Icon" />
         </Marker>
       )),
-    []
+    [locations]
   );
 
-  // TODO Fix Error: Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate. React limits the number of nested updates to prevent infinite loops
-  // TODO Map Crashes when I ask for location. Shows location for a second first
   return (
     <MapDiv>
       <Map
         {...viewport}
         mapboxAccessToken={process.env.REACT_APP_MAP_ACCESS_TOKEN}
         mapStyle="mapbox://styles/jmart5564/cla77df0d001n15oy0bcrhmzp"
-        onMove={(viewport) => {
-          setViewport(viewport);
+        onMove={(evt) => {
+          setViewport(evt.viewport);
         }}
       >
         <GeolocateControl
+          ref={geolocateControlRef}
           positionOptions={{ enableHighAccuracy: true }}
           trackUserLocation={true}
+          showUserHeading={true}
+          auto
           position="top-left"
         />
         <NavigationControl position="top-left" />

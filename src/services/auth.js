@@ -1,7 +1,8 @@
 const BASE_URL = 'http://localhost:7890';
 
-// TODO fix user sign up with duplicate email
-// TODO fix user can still access home page with wrong password
+// TODO fix user sign up with duplicate email, try to run getUser. if user.status = 500
+// TODO fix user can still access home page with wrong password if user.status = 401
+// TODO user sign up also signs in
 
 export async function authUser({ email, password, type }) {
   let response;
