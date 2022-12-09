@@ -1,7 +1,5 @@
 const BASE_URL = 'http://localhost:7890';
 
-// TODO fix user sign up with duplicate email, try to run getUser. if user.status = 500
-// TODO fix user can still access home page with wrong password if user.status = 401
 // TODO user sign up also signs in
 
 export async function authUser({ email, password, type }) {
@@ -22,13 +20,12 @@ export async function authUser({ email, password, type }) {
       },
     });
     const resp = await response.json();
-    return resp;
-    // if (resp.ok) {
-    //   console.log('working');
-    //   return await resp.json();
-    // } else {
-    //   throw new Error('this email already has an account');
-    // }
+    // return resp;
+    if (resp.status === 500) {
+      throw new Error('this email already has an account');
+    } else {
+      return await resp;
+    }
   } else if (type === 'sign-in') {
     response = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
       method: 'POST',
@@ -44,12 +41,12 @@ export async function authUser({ email, password, type }) {
       },
     });
     const resp = await response.json();
-    return resp;
-    // if (resp.ok) {
-    //   return await resp.json();
-    // } else {
-    //   throw new Error();
-    // }
+    // return resp;
+    if (resp.status === 401) {
+      throw new Error('wrong password, try again');
+    } else {
+      return await resp;
+    }
   }
 }
 
