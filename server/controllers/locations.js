@@ -12,6 +12,14 @@ export default Router()
       next(e);
     }
   })
+  .get('/:id', authenticate, async (req, res, next) => {
+    try {
+      const locations = await Location.getById(req.params.id);
+      res.json(locations);
+    } catch (e) {
+      next(e);
+    }
+  })
   .post('/', authenticate, async (req, res, next) => {
     try {
       const newLocation = await Location.insert({ ...req.body, user_id: req.user.id });

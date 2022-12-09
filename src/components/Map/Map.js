@@ -6,9 +6,10 @@ import Map, {
   ScaleControl,
   GeolocateControl,
 } from 'react-map-gl';
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useLocations } from '../../hooks/useLocations.js';
+import { deleteLocation, getLocationId } from '../../services/location.js';
 // import { UserContext } from '../../context/UserContext.js';
 
 export default function MapComponent() {
@@ -36,12 +37,19 @@ export default function MapComponent() {
     };
   }, []);
 
-  const geolocateControlRef = useCallback((ref) => {
-    if (ref) {
-      // Activate as soon as the control is loaded
-      ref.trigger();
-    }
-  }, []);
+  // TODO Figure out why this doesn't work, works on save a new update not on load
+  // const geolocateControlRef = useCallback((ref) => {
+  //   if (ref) {
+  //     // Activate as soon as the control is loaded
+  //     ref.trigger();
+  //   }
+  // }, []);
+
+  const getById = async (id) => {
+    const response = await getLocationId(id);
+    return response;
+  };
+  // TODO id is coming back as a 404, need to fix, this should also fix DELETE issue
 
   const pins = useMemo(
     () =>
@@ -55,6 +63,7 @@ export default function MapComponent() {
             // If we let the click event propagates to the map, it will immediately close the popup
             // with `closeOnClick: true`
             e.originalEvent.stopPropagation();
+            getById(location.id);
             setSelectedPin(location);
           }}
         >
@@ -63,6 +72,13 @@ export default function MapComponent() {
       )),
     [locations]
   );
+
+  //TODO locations/id shows up with correct id but says not found
+  const deleteMarker = async (selectedPin) => {
+    await getById(selectedPin.id);
+    const response = await deleteLocation(selectedPin.id);
+    return response;
+  };
 
   return (
     <MapDiv>
@@ -75,7 +91,7 @@ export default function MapComponent() {
         }}
       >
         <GeolocateControl
-          ref={geolocateControlRef}
+          // ref={geolocateControlRef}
           positionOptions={{ enableHighAccuracy: true }}
           trackUserLocation={true}
           showUserHeading={true}
@@ -95,15 +111,10 @@ export default function MapComponent() {
             latitude={Number(selectedPin.latitude)}
             onClose={() => setSelectedPin(null)}
           >
-            <div>
-              {selectedPin.city}, {selectedPin.state} |{' '}
-              <a
-                target="_new"
-                href={`http://en.wikipedia.org/w/index.php?title=Special:Search&search=${selectedPin.city}, ${selectedPin.state}`}
-              >
-                Wikipedia
-              </a>
-            </div>
+            <PopUpDiv>
+              Pin Selected
+              <button onClick={deleteMarker}>Delete Pin</button>
+            </PopUpDiv>
             <img width="100%" src={selectedPin.image} />
           </Popup>
         )}
@@ -128,4 +139,19 @@ const MushImg = styled.img`
   height: 50px;
   width: 50px;
   cursor: pointer;
+`;
+
+const PopUpDiv = styled.div`
+  width: 95px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: flex-end;
+  button {
+    height: 20px;
+    width: 80px;
+    display: flex;
+    align-self: center;
+    justify-self: flex-end;
+  }
 `;
