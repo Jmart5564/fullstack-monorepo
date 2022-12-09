@@ -1,8 +1,12 @@
-const fs = require('fs').promises;
+// const fs = require('fs').promises;
+import fs from 'node:fs/promises';
+import path from 'node:path';
+// import url from 'node:url';
+// const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
-module.exports = (pool) => {
+export default function (pool) {
   return fs
-    .readFile(`${__dirname}/../sql/setup.sql`, { encoding: 'utf-8' })
+    .readFile(path.resolve(`./sql/setup.sql`), { encoding: 'utf-8' })
     .then((sql) => pool.query(sql))
     .then(() => {
       if (process.env.NODE_ENV !== 'test') {
@@ -15,12 +19,10 @@ module.exports = (pool) => {
       if (dbNotFound) {
         const [err, db] = dbNotFound;
         console.error('❌ Error: ' + err);
-        console.info(
-          `Try running \`createdb -U postgres ${db}\` in your terminal`
-        );
+        console.info(`Try running \`createdb -U postgres ${db}\` in your terminal`);
       } else {
         console.error(error);
         console.error('❌ Error: ' + error.message);
       }
     });
-};
+}
