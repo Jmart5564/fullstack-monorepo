@@ -1,17 +1,8 @@
-# Template for Backend Express
+## Forager Journal
 
-The Golden Rule:
-🦸 🦸‍♂️ Stop starting and start finishing. 🏁
+A place where you can keep track of all your mushroom hunting locations with ease.
 
-If you work on more than one feature at a time, you are guaranteed to multiply your bugs and your anxiety.
-
-## Scripts
-
-| command                | description                                                                         |
-| ---------------------- | ----------------------------------------------------------------------------------- |
-| `npm start`            | starts the app - should only be used in production as changes will not get reloaded |
-| `npm run start:watch`  | runs the app using `nodemon` which watches for changes and reloads the app          |
-| `npm test`             | runs the tests once                                                                 |
-| `npm run test:watch`   | continually watches and runs the tests when files are updated                       |
-| `npm run setup-db`     | sets up the database locally                                                        |
-| `npm run setup-heroku` | sets up the database on heroku                                                      |
+Coming soon:
+1. Add journal entries to your location pins with data like date visited, what you found, your elevation, photos and any other details you may want to add
+2. Location caching: many foraging spot are out where there is no service, with this feature, you will still be able to navigate yourself to your spots out of service as well as add new locations that upload once you are back in service.
+3. google OAuth: sign in easily with your google account
