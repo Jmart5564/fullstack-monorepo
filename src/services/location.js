@@ -21,27 +21,6 @@ export async function getLocations() {
   }
 }
 
-export async function getLocationId(id) {
-  try {
-    const resp = await fetch(`${BASE_URL}/api/v1/locations/${id}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    });
-    if (resp.ok) {
-      console.log('you got location by id');
-      return await resp.json();
-    } else {
-      throw new Error('Could not get location id');
-    }
-  } catch (e) {
-    return null;
-  }
-}
-
 export async function deleteLocation(id) {
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/locations/${id}`, {

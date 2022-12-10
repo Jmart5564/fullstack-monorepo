@@ -9,7 +9,7 @@ import Map, {
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useLocations } from '../../hooks/useLocations.js';
-import { deleteLocation, getLocationId } from '../../services/location.js';
+import { deleteLocation } from '../../services/location.js';
 // import { UserContext } from '../../context/UserContext.js';
 
 export default function MapComponent() {
@@ -21,7 +21,7 @@ export default function MapComponent() {
     zoom: 10,
   });
   const [selectedPin, setSelectedPin] = useState(null);
-  const { locations } = useLocations();
+  const { locations, setLocations } = useLocations();
   // const { loading } = useContext(UserContext);
 
   useEffect(() => {
@@ -45,10 +45,6 @@ export default function MapComponent() {
   //   }
   // }, []);
 
-  const getById = async (id) => {
-    const response = await getLocationId(id);
-    return response;
-  };
   // TODO id is coming back as a 404, need to fix, this should also fix DELETE issue
 
   const pins = useMemo(
@@ -63,8 +59,8 @@ export default function MapComponent() {
             // If we let the click event propagates to the map, it will immediately close the popup
             // with `closeOnClick: true`
             e.originalEvent.stopPropagation();
-            getById(location.id);
             setSelectedPin(location);
+            console.log('onclick', location);
           }}
         >
           <MushImg src="/mushroom.svg" alt="Mushroom Icon" />
@@ -73,11 +69,11 @@ export default function MapComponent() {
     [locations]
   );
 
-  //TODO locations/id shows up with correct id but says not found
-  const deleteMarker = async (selectedPin) => {
-    await getById(selectedPin.id);
-    const response = await deleteLocation(selectedPin.id);
-    return response;
+  const deleteMarker = async () => {
+    await deleteLocation(selectedPin.id);
+    const newLocations = locations.filter((loc) => loc.id !== selectedPin.id);
+    setLocations(newLocations);
+    setSelectedPin(null);
   };
 
   return (
