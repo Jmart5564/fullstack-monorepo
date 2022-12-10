@@ -32,7 +32,7 @@ export async function deleteLocation(id) {
       credentials: 'include',
     });
     if (resp.ok) {
-      console.log('you tried to delete something');
+      console.log('you deleted the marker');
       return await resp.json();
     } else {
       throw new Error('Could not delete marker');

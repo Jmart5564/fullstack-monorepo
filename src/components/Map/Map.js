@@ -45,8 +45,6 @@ export default function MapComponent() {
   //   }
   // }, []);
 
-  // TODO id is coming back as a 404, need to fix, this should also fix DELETE issue
-
   const pins = useMemo(
     () =>
       locations.map((location) => (
