@@ -24,10 +24,7 @@ CREATE TABLE journals (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   location_id BIGINT,
   date DATE NOT NULL DEFAULT CURRENT_DATE,
-  elevation INT,
-  species VARCHAR,
   details VARCHAR,
-  image_url VARCHAR,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   FOREIGN KEY (location_id) REFERENCES locations(id)
 );
