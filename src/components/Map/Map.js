@@ -9,7 +9,7 @@ import Map, {
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useLocations } from '../../hooks/useLocations.js';
-import { deleteLocation } from '../../services/location.js';
+import { deleteLocation, addLocation, getLocations } from '../../services/location.js';
 // import { UserContext } from '../../context/UserContext.js';
 
 export default function MapComponent() {
@@ -67,6 +67,15 @@ export default function MapComponent() {
     [locations]
   );
 
+  console.log('locations', locations);
+
+  const addMarker = async (e) => {
+    const newLocation = e.lngLat;
+    await addLocation(newLocation);
+    const updatedLocations = await getLocations();
+    setLocations(updatedLocations);
+  };
+
   const deleteMarker = async () => {
     await deleteLocation(selectedPin.id);
     const newLocations = locations.filter((loc) => loc.id !== selectedPin.id);
@@ -80,6 +89,7 @@ export default function MapComponent() {
         {...viewport}
         mapboxAccessToken={process.env.REACT_APP_MAP_ACCESS_TOKEN}
         mapStyle="mapbox://styles/jmart5564/cla77df0d001n15oy0bcrhmzp"
+        onClick={addMarker}
         onMove={(evt) => {
           setViewport(evt.viewport);
         }}
