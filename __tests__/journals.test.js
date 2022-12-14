@@ -3,6 +3,8 @@ import setup from '../data/setup.js';
 import request from 'supertest';
 import app from '../server/app.js';
 import UserService from '../server/services/UserService.js';
+import Journal from '../server/models/Journal.js';
+import Location from '../server/models/Location.js';
 
 const mockUser = {
   firstName: 'momo',
@@ -41,20 +43,19 @@ describe('journals', () => {
   it('GET /api/v1/journals returns all journal entries associated with the specific location id', async () => {
     // create a user
     const [agent, user] = await registerAndLogin();
-    // add a second user with items
-    const user2 = await UserService.create(mockUser2);
     const user1Location = await Location.insert({
+      id: 1,
       latitude: 44.2456,
       longitude: 126.8735,
       user_id: user.id,
     });
-    await Location.insert({
-      latitude: 46.2935,
-      longitude: 121.3927,
-      user_id: user2.id,
+    const user1Journal = await Journal.insert({
+      date: '2022-12-13',
+      details: 'found it!',
+      location_id: user1Location.id,
     });
     const resp = await agent.get('/api/v1/journals');
     expect(resp.status).toEqual(200);
-    expect(resp.body).toEqual([user1Location]);
+    expect(resp.body).toEqual([user1Journal]);
   });
 });

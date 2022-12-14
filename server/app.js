@@ -6,6 +6,7 @@ import users from './controllers/users.js';
 import locations from './controllers/locations.js';
 import notFound from './middleware/not-found.js';
 import error from './middleware/error.js';
+import journals from './controllers/journals.js';
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(
 );
 app.use('/api/v1/users', users);
 app.use('/api/v1/locations', locations);
+app.use('/api/v1/journals', journals);
 
 // Error handling & 404 middleware for when
 // a request doesn't match any app routes
