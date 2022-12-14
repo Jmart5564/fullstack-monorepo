@@ -67,13 +67,15 @@ export default function MapComponent() {
     [locations]
   );
 
-  console.log('locations', locations);
-
   const addMarker = async (e) => {
-    const newLocation = e.lngLat;
-    await addLocation(newLocation);
-    const updatedLocations = await getLocations();
-    setLocations(updatedLocations);
+    if (selectedPin !== null) {
+      return;
+    } else {
+      const newLocation = e.lngLat;
+      await addLocation(newLocation);
+      const updatedLocations = await getLocations();
+      setLocations(updatedLocations);
+    }
   };
 
   const deleteMarker = async () => {
