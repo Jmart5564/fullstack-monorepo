@@ -39,6 +39,9 @@ export default function Auth() {
 
   return (
     <AuthPageDiv>
+      <div>
+        <h1>Forager Journal</h1>
+      </div>
       <AuthDiv>
         <div>
           <Link to="/auth/sign-in">Sign In</Link>
@@ -60,29 +63,22 @@ export default function Auth() {
 
 const AuthPageDiv = styled.div`
   height: 100vh;
-  width: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  align-content: center;
-  align-self: center;
-  justify-items: center;
   justify-content: center;
-  text-align: center;
+  gap: 20px;
+  align-items: center;
 `;
 
 const AuthDiv = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  align-content: center;
-  align-self: center;
-  justify-items: center;
   justify-content: center;
+  align-items: center;
   text-align: center;
   border: 1px solid black;
-  width: 30vh;
-  height: 30vh;
+  width: 350px;
+  height: 350px;
   gap: 20px;
   a:link {
     text-decoration: none;

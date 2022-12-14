@@ -1,5 +1,6 @@
 import React from 'react';
 import { logout } from '../../services/auth.js';
+import styled from 'styled-components';
 
 export default function Header() {
   const signOut = async () => {
@@ -7,9 +8,23 @@ export default function Header() {
     return response;
   };
   return (
-    <div>
-      <h1>Forager Journal</h1>
+    <HeaderDiv>
       <button onClick={signOut}>Sign Out</button>
-    </div>
+      <h1>Forager Journal</h1>
+    </HeaderDiv>
   );
 }
+
+const HeaderDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  h1 {
+    font-size: 30px;
+  }
+  button {
+    margin-top: 20px;
+    font-size: large;
+    cursor: pointer;
+  }
+`;

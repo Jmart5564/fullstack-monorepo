@@ -12,6 +12,7 @@ export async function getJournals() {
     });
     if (resp.ok) {
       const journal = await resp.json();
+      console.log('journal', journal);
       return journal;
     } else {
       throw new Error();
