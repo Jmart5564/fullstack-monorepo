@@ -61,7 +61,7 @@ export default function MapComponent() {
             console.log('onclick', location);
           }}
         >
-          <MushImg src="/mushroom.svg" alt="Mushroom Icon" />
+          <MushImg src="/mushroom2.svg" alt="Mushroom Icon" />
         </Marker>
       )),
     [locations]
@@ -130,7 +130,7 @@ export default function MapComponent() {
 }
 
 const MapDiv = styled.div`
-  height: 100vh;
+  height: 90vh;
   button {
     width: 40px;
     height: 40px;
