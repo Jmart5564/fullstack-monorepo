@@ -10,6 +10,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useLocations } from '../../hooks/useLocations.js';
 import { deleteLocation, addLocation, getLocations } from '../../services/location.js';
+import FormModal from './FormModal.js';
 
 export default function MapComponent() {
   const [viewport, setViewport] = useState({
@@ -21,6 +22,7 @@ export default function MapComponent() {
   });
   const [selectedPin, setSelectedPin] = useState(null);
   const { locations, setLocations } = useLocations();
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     const listener = (e) => {
@@ -84,51 +86,56 @@ export default function MapComponent() {
   };
 
   return (
-    <MapDiv>
-      <Map
-        {...viewport}
-        mapboxAccessToken={process.env.REACT_APP_MAP_ACCESS_TOKEN}
-        mapStyle="mapbox://styles/jmart5564/cla77df0d001n15oy0bcrhmzp"
-        onClick={addMarker}
-        onMove={(evt) => {
-          setViewport(evt.viewport);
-        }}
-      >
-        <GeolocateControl
-          // ref={geolocateControlRef}
-          positionOptions={{ enableHighAccuracy: true }}
-          trackUserLocation={true}
-          showUserHeading={true}
-          auto
-          position="top-left"
-        />
-        <NavigationControl position="top-left" />
-        <FullscreenControl position="top-left" />
-        <ScaleControl />
+    <MainDiv>
+      <MapDiv>
+        <Map
+          {...viewport}
+          mapboxAccessToken={process.env.REACT_APP_MAP_ACCESS_TOKEN}
+          mapStyle="mapbox://styles/jmart5564/cla77df0d001n15oy0bcrhmzp"
+          onClick={addMarker}
+          onMove={(evt) => {
+            setViewport(evt.viewport);
+          }}
+        >
+          <GeolocateControl
+            // ref={geolocateControlRef}
+            positionOptions={{ enableHighAccuracy: true }}
+            trackUserLocation={true}
+            showUserHeading={true}
+            auto
+            position="top-left"
+          />
+          <NavigationControl position="top-left" />
+          <FullscreenControl position="top-left" />
+          <ScaleControl />
 
-        {pins}
+          {pins}
 
-        {selectedPin && (
-          <Popup
-            anchor="top"
-            longitude={Number(selectedPin.longitude)}
-            latitude={Number(selectedPin.latitude)}
-            onClose={() => setSelectedPin(null)}
-          >
-            <PopUpDiv>
-              <button>Add Entry</button>
-              {selectedPin.journalArray.map((entry, i) => (
-                <JournalDiv key={i}>
-                  <span>{entry.date}</span>
-                  <p>{entry.details}</p>
-                </JournalDiv>
-              ))}
-              <button onClick={deleteMarker}>Delete Pin</button>
-            </PopUpDiv>
-          </Popup>
-        )}
-      </Map>
-    </MapDiv>
+          {selectedPin && (
+            <Popup
+              anchor="top"
+              longitude={Number(selectedPin.longitude)}
+              latitude={Number(selectedPin.latitude)}
+              onClose={() => setSelectedPin(null)}
+            >
+              <PopUpDiv>
+                <button onClick={() => setOpenModal(true)}>Add Entry</button>
+                {selectedPin.journalArray.map((entry, i) => (
+                  <JournalDiv key={i}>
+                    <span>{entry.date}</span>
+                    <p>{entry.details}</p>
+                  </JournalDiv>
+                ))}
+                <button onClick={deleteMarker}>Delete Pin</button>
+              </PopUpDiv>
+            </Popup>
+          )}
+        </Map>
+      </MapDiv>
+      <ModalDiv>
+        <FormModal open={openModal} />
+      </ModalDiv>
+    </MainDiv>
   );
 }
 
@@ -176,5 +183,28 @@ const JournalDiv = styled.div`
   border-bottom: 2px solid black;
   p {
     margin: 0;
+    text-align: center;
   }
+`;
+
+const ModalDiv = styled.div`
+  width: 400px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: flex-end;
+  justify-self: center;
+  align-self: center;
+  z-index: 10;
+  position: absolute;
+  button {
+    width: 70px;
+    height: 30px;
+  }
+`;
+
+const MainDiv = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
