@@ -17,7 +17,7 @@ app.use(cookieParser());
 // App routes
 app.use(
   cors({
-    origin: ['http://localhost:7891'],
+    origin: ['http://localhost:7891', 'https://forager-journal-jess.herokuapp.com/'],
     credentials: true,
   })
 );
