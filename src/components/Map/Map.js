@@ -82,6 +82,14 @@ export default function MapComponent() {
   };
 
   const addJournalEntry = async () => {
+    if (textarea.current.value === '') {
+      alert('Please provide an entry');
+      return;
+    }
+    if (dateInput.current.value === '') {
+      alert('Please provide a date');
+      return;
+    }
     const newJournal = {
       location_id: selectedPin.id,
       details: textarea.current.value,
@@ -222,6 +230,7 @@ const ModalDiv = styled.div`
   button {
     width: 70px;
     height: 30px;
+    cursor: pointer;
   }
 `;
 
@@ -249,5 +258,10 @@ const FormDiv = styled.div`
   textarea {
     height: 100px;
     width: 300px;
+  }
+  input {
+    padding: 2px;
+    margin-bottom: 15px;
+    font-size: 15px;
   }
 `;
