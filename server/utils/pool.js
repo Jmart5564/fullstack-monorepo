@@ -1,15 +1,3 @@
-// const { Pool } = require('pg');
-// import { Pool } from 'pg';
-
-// const pool = new Pool({
-//   connectionString: process.env.DATABASE_URL,
-//   ssl: process.env.PGSSLMODE && { rejectUnauthorized: false },
-// });
-
-// pool.on('connect', () => console.info('🐘 Postgres connected'));
-
-// export default pool;
-
 import pg from 'pg';
 // Even if redundantly done elsewhere. It needs to be done here though because
 // the environment variable is used immediately. It cannot wait for later.
@@ -20,7 +8,7 @@ dotenv.config();
 
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.PGSSLMODE === 'true' && { rejectUnauthorized: false },
+  ssl: process.env.PGSSLMODE && { rejectUnauthorized: false },
 });
 
 pool.on('connect', () => console.log('🐘 Postgres connected'));
