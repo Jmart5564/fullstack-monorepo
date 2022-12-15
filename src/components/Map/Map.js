@@ -9,7 +9,8 @@ import Map, {
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useLocations } from '../../hooks/useLocations.js';
-import { deleteLocation, getLocationId } from '../../services/location.js';
+// import { useJournals } from '../../hooks/useJournals.js';
+import { deleteLocation, addLocation, getLocations } from '../../services/location.js';
 // import { UserContext } from '../../context/UserContext.js';
 
 export default function MapComponent() {
@@ -21,7 +22,9 @@ export default function MapComponent() {
     zoom: 10,
   });
   const [selectedPin, setSelectedPin] = useState(null);
-  const { locations } = useLocations();
+  const { locations, setLocations } = useLocations();
+  console.log('locations', locations);
+  // const { journals } = useJournals();
   // const { loading } = useContext(UserContext);
 
   useEffect(() => {
@@ -45,12 +48,6 @@ export default function MapComponent() {
   //   }
   // }, []);
 
-  const getById = async (id) => {
-    const response = await getLocationId(id);
-    return response;
-  };
-  // TODO id is coming back as a 404, need to fix, this should also fix DELETE issue
-
   const pins = useMemo(
     () =>
       locations.map((location) => (
@@ -63,21 +60,44 @@ export default function MapComponent() {
             // If we let the click event propagates to the map, it will immediately close the popup
             // with `closeOnClick: true`
             e.originalEvent.stopPropagation();
-            getById(location.id);
             setSelectedPin(location);
+            console.log('onclick', location);
           }}
         >
-          <MushImg src="/mushroom.svg" alt="Mushroom Icon" />
+          <MushImg src="/mushroom2.svg" alt="Mushroom Icon" />
         </Marker>
       )),
     [locations]
   );
 
-  //TODO locations/id shows up with correct id but says not found
-  const deleteMarker = async (selectedPin) => {
-    await getById(selectedPin.id);
-    const response = await deleteLocation(selectedPin.id);
-    return response;
+  // const entries = useMemo(
+  //   () =>
+  //     journals.map((journal) => (
+  //       <div key={journal.id}>
+  //         <span>{journal.date}</span>
+  //         <p>{journal.details}</p>
+  //       </div>
+  //     )),
+  //   [journals]
+  // );
+  // console.log('entries', entries);
+
+  const addMarker = async (e) => {
+    if (selectedPin !== null) {
+      return;
+    } else {
+      const newLocation = e.lngLat;
+      await addLocation(newLocation);
+      const updatedLocations = await getLocations();
+      setLocations(updatedLocations);
+    }
+  };
+
+  const deleteMarker = async () => {
+    await deleteLocation(selectedPin.id);
+    const newLocations = locations.filter((loc) => loc.id !== selectedPin.id);
+    setLocations(newLocations);
+    setSelectedPin(null);
   };
 
   return (
@@ -86,6 +106,7 @@ export default function MapComponent() {
         {...viewport}
         mapboxAccessToken={process.env.REACT_APP_MAP_ACCESS_TOKEN}
         mapStyle="mapbox://styles/jmart5564/cla77df0d001n15oy0bcrhmzp"
+        onClick={addMarker}
         onMove={(evt) => {
           setViewport(evt.viewport);
         }}
@@ -112,10 +133,14 @@ export default function MapComponent() {
             onClose={() => setSelectedPin(null)}
           >
             <PopUpDiv>
-              Pin Selected
+              {selectedPin.journalArray.map((entry, i) => (
+                <div key={i}>
+                  <span>{entry.date}</span>
+                  <p>{entry.details}</p>
+                </div>
+              ))}
               <button onClick={deleteMarker}>Delete Pin</button>
             </PopUpDiv>
-            <img width="100%" src={selectedPin.image} />
           </Popup>
         )}
       </Map>
@@ -124,7 +149,7 @@ export default function MapComponent() {
 }
 
 const MapDiv = styled.div`
-  height: 100vh;
+  height: 87vh;
   button {
     width: 40px;
     height: 40px;
@@ -148,10 +173,12 @@ const PopUpDiv = styled.div`
   align-items: center;
   justify-items: flex-end;
   button {
+    margin-top: 5px;
     height: 20px;
     width: 80px;
     display: flex;
     align-self: center;
     justify-self: flex-end;
+    cursor: pointer;
   }
 `;
