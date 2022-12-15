@@ -24,6 +24,7 @@ export default function MapComponent() {
   const { locations, setLocations } = useLocations();
   const [openModal, setOpenModal] = useState(false);
   const textarea = useRef();
+  const dateInput = useRef();
 
   useEffect(() => {
     const listener = (e) => {
@@ -90,7 +91,12 @@ export default function MapComponent() {
   };
 
   const addJournalEntry = async () => {
-    const newJournal = { location_id: selectedPin.id, details: textarea.value };
+    const newJournal = {
+      location_id: selectedPin.id,
+      details: textarea.current.value,
+      date: dateInput.current.value,
+    };
+    console.log('newJournal', dateInput.current.value);
     await addJournal(newJournal);
   };
 
@@ -146,7 +152,8 @@ export default function MapComponent() {
         {openModal && (
           <FormDiv>
             <h1>Add New Journal Entry</h1>
-            <textarea ref={textarea}></textarea>
+            <input ref={dateInput} type="date"></input>
+            <textarea ref={textarea} type="text"></textarea>
             <div>
               <button onClick={addJournalEntry}>Submit</button>
               <button onClick={() => setOpenModal(false)}>Cancel</button>

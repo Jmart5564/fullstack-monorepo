@@ -14,7 +14,7 @@ export default Router()
   })
   .post('/', authenticate, async (req, res, next) => {
     try {
-      const newJournal = await Journal.insert({ ...req.body, location_id: req.params.id });
+      const newJournal = await Journal.insert(req.body);
       res.json(newJournal);
     } catch (e) {
       next(e);

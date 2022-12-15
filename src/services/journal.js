@@ -24,7 +24,8 @@ export async function getJournals() {
 }
 
 export async function addJournal(newJournal) {
-  const { id, details, date, location_id } = newJournal;
+  const { details, location_id, date } = newJournal;
+  console.log('servicejournal', newJournal);
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/journals`, {
       method: 'POST',
@@ -33,10 +34,9 @@ export async function addJournal(newJournal) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id,
         details,
-        date,
         location_id,
+        date,
       }),
       credentials: 'include',
     });
