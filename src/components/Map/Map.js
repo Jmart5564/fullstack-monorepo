@@ -9,9 +9,7 @@ import Map, {
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useLocations } from '../../hooks/useLocations.js';
-// import { useJournals } from '../../hooks/useJournals.js';
 import { deleteLocation, addLocation, getLocations } from '../../services/location.js';
-// import { UserContext } from '../../context/UserContext.js';
 
 export default function MapComponent() {
   const [viewport, setViewport] = useState({
@@ -23,9 +21,6 @@ export default function MapComponent() {
   });
   const [selectedPin, setSelectedPin] = useState(null);
   const { locations, setLocations } = useLocations();
-  console.log('locations', locations);
-  // const { journals } = useJournals();
-  // const { loading } = useContext(UserContext);
 
   useEffect(() => {
     const listener = (e) => {
@@ -69,18 +64,6 @@ export default function MapComponent() {
       )),
     [locations]
   );
-
-  // const entries = useMemo(
-  //   () =>
-  //     journals.map((journal) => (
-  //       <div key={journal.id}>
-  //         <span>{journal.date}</span>
-  //         <p>{journal.details}</p>
-  //       </div>
-  //     )),
-  //   [journals]
-  // );
-  // console.log('entries', entries);
 
   const addMarker = async (e) => {
     if (selectedPin !== null) {
@@ -133,11 +116,12 @@ export default function MapComponent() {
             onClose={() => setSelectedPin(null)}
           >
             <PopUpDiv>
+              <button>Add Entry</button>
               {selectedPin.journalArray.map((entry, i) => (
-                <div key={i}>
+                <JournalDiv key={i}>
                   <span>{entry.date}</span>
                   <p>{entry.details}</p>
-                </div>
+                </JournalDiv>
               ))}
               <button onClick={deleteMarker}>Delete Pin</button>
             </PopUpDiv>
@@ -167,7 +151,7 @@ const MushImg = styled.img`
 `;
 
 const PopUpDiv = styled.div`
-  width: 95px;
+  width: 150px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -180,5 +164,17 @@ const PopUpDiv = styled.div`
     align-self: center;
     justify-self: flex-end;
     cursor: pointer;
+  }
+`;
+
+const JournalDiv = styled.div`
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: flex-end;
+  border-bottom: 2px solid black;
+  p {
+    margin: 0;
   }
 `;
