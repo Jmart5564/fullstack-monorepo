@@ -11,6 +11,7 @@ export async function getJournals() {
       credentials: 'include',
     });
     if (resp.ok) {
+      console.log('respbody', resp.body);
       const journal = await resp.json();
       console.log('journal', journal);
       return journal;

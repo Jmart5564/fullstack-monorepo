@@ -5,12 +5,14 @@ export default class Location {
   user_id;
   latitude;
   longitude;
+  journalArray;
 
   constructor(row) {
     this.id = row.id;
     this.user_id = row.user_id;
     this.latitude = row.latitude;
     this.longitude = row.longitude;
+    this.journalArray = row.journal_array;
   }
 
   static async insert({ user_id, latitude, longitude }) {
@@ -28,9 +30,15 @@ export default class Location {
 
   static async getAll(user_id) {
     const { rows } = await pool.query(
-      'SELECT * from locations where user_id = $1 ORDER BY created_at DESC',
+      `SELECT locations.*, COALESCE(json_agg(json_build_object('details', journals.details, 'date', journals.date)), '[]')
+      AS journal_array
+      FROM locations
+      LEFT JOIN journals on journals.location_id = locations.id 
+      WHERE user_id= $1
+      GROUP BY locations.id`,
       [user_id]
     );
+    rows.map((row) => console.log(row.journal_array));
     return rows.map((location) => new Location(location));
   }
 

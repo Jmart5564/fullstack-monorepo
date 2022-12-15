@@ -10,9 +10,11 @@ export default class Journal {
     this.id = row.id;
     this.location_id = row.location_id;
     this.details = row.details;
+    this.date = row.date;
   }
 
   static async getAll(location_id) {
+    console.log('locationID', location_id);
     const { rows } = await pool.query(
       `SELECT * from journals where location_id = $1 ORDER BY created_at DESC`,
       [location_id]

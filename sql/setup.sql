@@ -16,7 +16,6 @@ CREATE TABLE locations (
   user_id BIGINT,
   latitude DECIMAL(18,4),
   longitude DECIMAL(18,4),
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 

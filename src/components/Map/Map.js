@@ -9,7 +9,7 @@ import Map, {
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useLocations } from '../../hooks/useLocations.js';
-import { useJournals } from '../../hooks/useJournals.js';
+// import { useJournals } from '../../hooks/useJournals.js';
 import { deleteLocation, addLocation, getLocations } from '../../services/location.js';
 // import { UserContext } from '../../context/UserContext.js';
 
@@ -23,7 +23,8 @@ export default function MapComponent() {
   });
   const [selectedPin, setSelectedPin] = useState(null);
   const { locations, setLocations } = useLocations();
-  const { journals } = useJournals();
+  console.log('locations', locations);
+  // const { journals } = useJournals();
   // const { loading } = useContext(UserContext);
 
   useEffect(() => {
@@ -69,17 +70,17 @@ export default function MapComponent() {
     [locations]
   );
 
-  const entries = useMemo(
-    () =>
-      journals.map((journal) => (
-        <div key={journal.location_id}>
-          <span>{journal.date}</span>
-          <p>{journal.details}</p>
-        </div>
-      )),
-    [journals]
-  );
-  console.log('entries', entries);
+  // const entries = useMemo(
+  //   () =>
+  //     journals.map((journal) => (
+  //       <div key={journal.id}>
+  //         <span>{journal.date}</span>
+  //         <p>{journal.details}</p>
+  //       </div>
+  //     )),
+  //   [journals]
+  // );
+  // console.log('entries', entries);
 
   const addMarker = async (e) => {
     if (selectedPin !== null) {
@@ -132,6 +133,12 @@ export default function MapComponent() {
             onClose={() => setSelectedPin(null)}
           >
             <PopUpDiv>
+              {selectedPin.journalArray.map((entry, i) => (
+                <div key={i}>
+                  <span>{entry.date}</span>
+                  <p>{entry.details}</p>
+                </div>
+              ))}
               <button onClick={deleteMarker}>Delete Pin</button>
             </PopUpDiv>
           </Popup>
