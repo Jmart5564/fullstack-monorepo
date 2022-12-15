@@ -6,12 +6,11 @@ import Map, {
   ScaleControl,
   GeolocateControl,
 } from 'react-map-gl';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import { useLocations } from '../../hooks/useLocations.js';
-// import { useJournals } from '../../hooks/useJournals.js';
 import { deleteLocation, addLocation, getLocations } from '../../services/location.js';
-// import { UserContext } from '../../context/UserContext.js';
+import { addJournal } from '../../services/journal.js';
 
 export default function MapComponent() {
   const [viewport, setViewport] = useState({
@@ -23,9 +22,9 @@ export default function MapComponent() {
   });
   const [selectedPin, setSelectedPin] = useState(null);
   const { locations, setLocations } = useLocations();
-  console.log('locations', locations);
-  // const { journals } = useJournals();
-  // const { loading } = useContext(UserContext);
+  const [openModal, setOpenModal] = useState(false);
+  const textarea = useRef();
+  const dateInput = useRef();
 
   useEffect(() => {
     const listener = (e) => {
@@ -40,14 +39,6 @@ export default function MapComponent() {
     };
   }, []);
 
-  // TODO Figure out why this doesn't work, works on save a new update not on load
-  // const geolocateControlRef = useCallback((ref) => {
-  //   if (ref) {
-  //     // Activate as soon as the control is loaded
-  //     ref.trigger();
-  //   }
-  // }, []);
-
   const pins = useMemo(
     () =>
       locations.map((location) => (
@@ -61,7 +52,6 @@ export default function MapComponent() {
             // with `closeOnClick: true`
             e.originalEvent.stopPropagation();
             setSelectedPin(location);
-            console.log('onclick', location);
           }}
         >
           <MushImg src="/mushroom2.svg" alt="Mushroom Icon" />
@@ -70,19 +60,10 @@ export default function MapComponent() {
     [locations]
   );
 
-  // const entries = useMemo(
-  //   () =>
-  //     journals.map((journal) => (
-  //       <div key={journal.id}>
-  //         <span>{journal.date}</span>
-  //         <p>{journal.details}</p>
-  //       </div>
-  //     )),
-  //   [journals]
-  // );
-  // console.log('entries', entries);
-
   const addMarker = async (e) => {
+    if (openModal === true) {
+      setOpenModal(false);
+    }
     if (selectedPin !== null) {
       return;
     } else {
@@ -100,56 +81,86 @@ export default function MapComponent() {
     setSelectedPin(null);
   };
 
+  const addJournalEntry = async () => {
+    const newJournal = {
+      location_id: selectedPin.id,
+      details: textarea.current.value,
+      date: dateInput.current.value,
+    };
+    await addJournal(newJournal);
+    setOpenModal(false);
+    setSelectedPin(null);
+    const updatedLocations = await getLocations();
+    setLocations(updatedLocations);
+  };
+
   return (
-    <MapDiv>
-      <Map
-        {...viewport}
-        mapboxAccessToken={process.env.REACT_APP_MAP_ACCESS_TOKEN}
-        mapStyle="mapbox://styles/jmart5564/cla77df0d001n15oy0bcrhmzp"
-        onClick={addMarker}
-        onMove={(evt) => {
-          setViewport(evt.viewport);
-        }}
-      >
-        <GeolocateControl
-          // ref={geolocateControlRef}
-          positionOptions={{ enableHighAccuracy: true }}
-          trackUserLocation={true}
-          showUserHeading={true}
-          auto
-          position="top-left"
-        />
-        <NavigationControl position="top-left" />
-        <FullscreenControl position="top-left" />
-        <ScaleControl />
+    <MainDiv>
+      <MapDiv>
+        <Map
+          {...viewport}
+          mapboxAccessToken={process.env.REACT_APP_MAP_ACCESS_TOKEN}
+          mapStyle="mapbox://styles/jmart5564/cla77df0d001n15oy0bcrhmzp"
+          onClick={addMarker}
+          onMove={(evt) => {
+            setViewport(evt.viewport);
+          }}
+        >
+          <GeolocateControl
+            positionOptions={{ enableHighAccuracy: true }}
+            trackUserLocation={true}
+            showUserHeading={true}
+            auto
+            position="top-left"
+          />
+          <NavigationControl position="top-left" />
+          <FullscreenControl position="top-left" />
+          <ScaleControl />
 
-        {pins}
+          {pins}
 
-        {selectedPin && (
-          <Popup
-            anchor="top"
-            longitude={Number(selectedPin.longitude)}
-            latitude={Number(selectedPin.latitude)}
-            onClose={() => setSelectedPin(null)}
-          >
-            <PopUpDiv>
-              {selectedPin.journalArray.map((entry, i) => (
-                <div key={i}>
-                  <span>{entry.date}</span>
-                  <p>{entry.details}</p>
-                </div>
-              ))}
-              <button onClick={deleteMarker}>Delete Pin</button>
-            </PopUpDiv>
-          </Popup>
+          {selectedPin && (
+            <Popup
+              anchor="top"
+              longitude={Number(selectedPin.longitude)}
+              latitude={Number(selectedPin.latitude)}
+              onClick={() => setOpenModal(false)}
+              onClose={() => setSelectedPin(null)}
+            >
+              <PopUpDiv>
+                <button onClick={() => setOpenModal(true)}>Add Entry</button>
+                {selectedPin.journalArray.map((entry, i) => (
+                  <JournalDiv key={i}>
+                    <span>{entry.date}</span>
+                    <p>{entry.details}</p>
+                  </JournalDiv>
+                ))}
+                <button onClick={deleteMarker}>Delete Pin</button>
+              </PopUpDiv>
+            </Popup>
+          )}
+        </Map>
+      </MapDiv>
+      <ModalDiv>
+        {openModal && (
+          <FormDiv>
+            <h1>Add New Journal Entry</h1>
+            <input ref={dateInput} type="date"></input>
+            <textarea ref={textarea} type="text"></textarea>
+            <div>
+              <button onClick={addJournalEntry}>Submit</button>
+              <button onClick={() => setOpenModal(false)}>Cancel</button>
+            </div>
+          </FormDiv>
         )}
-      </Map>
-    </MapDiv>
+      </ModalDiv>
+    </MainDiv>
   );
 }
 
 const MapDiv = styled.div`
   height: 87vh;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 20px;
   button {
     width: 40px;
     height: 40px;
@@ -167,18 +178,76 @@ const MushImg = styled.img`
 `;
 
 const PopUpDiv = styled.div`
-  width: 95px;
+  width: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-items: flex-end;
   button {
-    margin-top: 5px;
+    margin: 10px 0px;
     height: 20px;
     width: 80px;
     display: flex;
     align-self: center;
     justify-self: flex-end;
     cursor: pointer;
+  }
+`;
+
+const JournalDiv = styled.div`
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: flex-end;
+  border-bottom: 1px solid black;
+  p {
+    margin: 0;
+    text-align: center;
+  }
+`;
+
+const ModalDiv = styled.div`
+  width: 400px;
+  height: fit-content;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: flex-end;
+  justify-self: center;
+  align-self: center;
+  z-index: 10;
+  position: absolute;
+  button {
+    width: 70px;
+    height: 30px;
+  }
+`;
+
+const MainDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const FormDiv = styled.div`
+  width: 400px;
+  height: fit-content;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: flex-end;
+  z-index: 10;
+  button {
+    width: 70px;
+    height: 30px;
+    margin: 20px 10px;
+  }
+  textarea {
+    height: 100px;
+    width: 300px;
   }
 `;
