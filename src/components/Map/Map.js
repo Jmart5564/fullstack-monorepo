@@ -10,7 +10,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useLocations } from '../../hooks/useLocations.js';
 import { deleteLocation, addLocation, getLocations } from '../../services/location.js';
-import FormModal from './FormModal.js';
 
 export default function MapComponent() {
   const [viewport, setViewport] = useState({
@@ -68,6 +67,9 @@ export default function MapComponent() {
   );
 
   const addMarker = async (e) => {
+    if (openModal === true) {
+      setOpenModal(false);
+    }
     if (selectedPin !== null) {
       return;
     } else {
@@ -116,6 +118,7 @@ export default function MapComponent() {
               anchor="top"
               longitude={Number(selectedPin.longitude)}
               latitude={Number(selectedPin.latitude)}
+              onClick={() => setOpenModal(false)}
               onClose={() => setSelectedPin(null)}
             >
               <PopUpDiv>
@@ -133,7 +136,16 @@ export default function MapComponent() {
         </Map>
       </MapDiv>
       <ModalDiv>
-        <FormModal open={openModal} />
+        {openModal && (
+          <FormDiv>
+            <h1>Add New Journal Entry</h1>
+            <textarea></textarea>
+            <div>
+              <button>Submit</button>
+              <button onClick={() => setOpenModal(false)}>Cancel</button>
+            </div>
+          </FormDiv>
+        )}
       </ModalDiv>
     </MainDiv>
   );
@@ -141,6 +153,7 @@ export default function MapComponent() {
 
 const MapDiv = styled.div`
   height: 87vh;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   button {
     width: 40px;
     height: 40px;
@@ -189,7 +202,8 @@ const JournalDiv = styled.div`
 
 const ModalDiv = styled.div`
   width: 400px;
-  height: 200px;
+  height: fit-content;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -207,4 +221,25 @@ const ModalDiv = styled.div`
 const MainDiv = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const FormDiv = styled.div`
+  width: 400px;
+  height: fit-content;
+  background-color: white;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: flex-end;
+  z-index: 10;
+  button {
+    width: 70px;
+    height: 30px;
+    margin: 20px 10px;
+  }
+  textarea {
+    height: 100px;
+    width: 300px;
+  }
 `;
