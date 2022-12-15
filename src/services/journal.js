@@ -11,9 +11,7 @@ export async function getJournals() {
       credentials: 'include',
     });
     if (resp.ok) {
-      console.log('respbody', resp.body);
       const journal = await resp.json();
-      console.log('journal', journal);
       return journal;
     } else {
       throw new Error();
@@ -25,7 +23,6 @@ export async function getJournals() {
 
 export async function addJournal(newJournal) {
   const { details, location_id, date } = newJournal;
-  console.log('servicejournal', newJournal);
   try {
     const resp = await fetch(`${BASE_URL}/api/v1/journals`, {
       method: 'POST',

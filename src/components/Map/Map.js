@@ -39,14 +39,6 @@ export default function MapComponent() {
     };
   }, []);
 
-  // TODO Figure out why this doesn't work, works on save a new update not on load
-  // const geolocateControlRef = useCallback((ref) => {
-  //   if (ref) {
-  //     // Activate as soon as the control is loaded
-  //     ref.trigger();
-  //   }
-  // }, []);
-
   const pins = useMemo(
     () =>
       locations.map((location) => (
@@ -60,7 +52,6 @@ export default function MapComponent() {
             // with `closeOnClick: true`
             e.originalEvent.stopPropagation();
             setSelectedPin(location);
-            console.log('onclick', location);
           }}
         >
           <MushImg src="/mushroom2.svg" alt="Mushroom Icon" />
@@ -96,8 +87,11 @@ export default function MapComponent() {
       details: textarea.current.value,
       date: dateInput.current.value,
     };
-    console.log('newJournal', dateInput.current.value);
     await addJournal(newJournal);
+    setOpenModal(false);
+    setSelectedPin(null);
+    const updatedLocations = await getLocations();
+    setLocations(updatedLocations);
   };
 
   return (
@@ -113,7 +107,6 @@ export default function MapComponent() {
           }}
         >
           <GeolocateControl
-            // ref={geolocateControlRef}
             positionOptions={{ enableHighAccuracy: true }}
             trackUserLocation={true}
             showUserHeading={true}
