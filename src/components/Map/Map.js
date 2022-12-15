@@ -230,6 +230,7 @@ const ModalDiv = styled.div`
   button {
     width: 70px;
     height: 30px;
+    cursor: pointer;
   }
 `;
 
@@ -257,5 +258,10 @@ const FormDiv = styled.div`
   textarea {
     height: 100px;
     width: 300px;
+  }
+  input {
+    padding: 2px;
+    margin-bottom: 15px;
+    font-size: 15px;
   }
 `;
