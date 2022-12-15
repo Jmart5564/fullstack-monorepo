@@ -82,6 +82,14 @@ export default function MapComponent() {
   };
 
   const addJournalEntry = async () => {
+    if (textarea.current.value === '') {
+      alert('Please provide an entry');
+      return;
+    }
+    if (dateInput.current.value === '') {
+      alert('Please provide a date');
+      return;
+    }
     const newJournal = {
       location_id: selectedPin.id,
       details: textarea.current.value,
