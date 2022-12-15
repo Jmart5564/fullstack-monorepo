@@ -38,7 +38,6 @@ export default class Location {
       GROUP BY locations.id`,
       [user_id]
     );
-    rows.map((row) => console.log(row.journal_array));
     return rows.map((location) => new Location(location));
   }
 

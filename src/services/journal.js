@@ -22,3 +22,30 @@ export async function getJournals() {
     return null;
   }
 }
+
+export async function addJournal(newJournal) {
+  const { id, details, date, location_id } = newJournal;
+  try {
+    const resp = await fetch(`${BASE_URL}/api/v1/journals`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id,
+        details,
+        date,
+        location_id,
+      }),
+      credentials: 'include',
+    });
+    if (resp.ok) {
+      return await resp.json();
+    } else {
+      throw new Error('Could not add journal entry');
+    }
+  } catch (e) {
+    return null;
+  }
+}

@@ -6,10 +6,11 @@ import Map, {
   ScaleControl,
   GeolocateControl,
 } from 'react-map-gl';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import { useLocations } from '../../hooks/useLocations.js';
 import { deleteLocation, addLocation, getLocations } from '../../services/location.js';
+import { addJournal } from '../../services/journal.js';
 
 export default function MapComponent() {
   const [viewport, setViewport] = useState({
@@ -22,6 +23,7 @@ export default function MapComponent() {
   const [selectedPin, setSelectedPin] = useState(null);
   const { locations, setLocations } = useLocations();
   const [openModal, setOpenModal] = useState(false);
+  const textarea = useRef();
 
   useEffect(() => {
     const listener = (e) => {
@@ -87,6 +89,11 @@ export default function MapComponent() {
     setSelectedPin(null);
   };
 
+  const addJournalEntry = async () => {
+    const newJournal = { location_id: selectedPin.id, details: textarea.value };
+    await addJournal(newJournal);
+  };
+
   return (
     <MainDiv>
       <MapDiv>
@@ -139,9 +146,9 @@ export default function MapComponent() {
         {openModal && (
           <FormDiv>
             <h1>Add New Journal Entry</h1>
-            <textarea></textarea>
+            <textarea ref={textarea}></textarea>
             <div>
-              <button>Submit</button>
+              <button onClick={addJournalEntry}>Submit</button>
               <button onClick={() => setOpenModal(false)}>Cancel</button>
             </div>
           </FormDiv>
@@ -153,7 +160,7 @@ export default function MapComponent() {
 
 const MapDiv = styled.div`
   height: 87vh;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 20px;
   button {
     width: 40px;
     height: 40px;
@@ -171,13 +178,13 @@ const MushImg = styled.img`
 `;
 
 const PopUpDiv = styled.div`
-  width: 150px;
+  width: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-items: flex-end;
   button {
-    margin-top: 5px;
+    margin: 10px 0px;
     height: 20px;
     width: 80px;
     display: flex;
@@ -188,12 +195,12 @@ const PopUpDiv = styled.div`
 `;
 
 const JournalDiv = styled.div`
-  width: 150px;
+  width: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-items: flex-end;
-  border-bottom: 2px solid black;
+  border-bottom: 1px solid black;
   p {
     margin: 0;
     text-align: center;
@@ -227,7 +234,8 @@ const FormDiv = styled.div`
   width: 400px;
   height: fit-content;
   background-color: white;
-  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
