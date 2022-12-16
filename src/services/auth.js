@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:7890';
+const BASE_URL = '';
 
 // TODO user sign up also signs in
 
