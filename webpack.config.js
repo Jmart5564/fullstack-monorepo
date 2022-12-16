@@ -143,6 +143,9 @@ export default {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
+          options: {
+            ignore: ['./node_modules/mapbox-gl/dist/mapbox-gl.js'],
+          },
         },
       },
       {
