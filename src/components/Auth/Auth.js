@@ -35,7 +35,7 @@ export default function Auth() {
     if (!loading && user) {
       navigate('/home');
     }
-  }, [loading]);
+  }, [loading, user, navigate]);
 
   return (
     <AuthPageDiv>
