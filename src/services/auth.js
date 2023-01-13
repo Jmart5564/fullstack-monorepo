@@ -1,4 +1,5 @@
 const BASE_URL = '';
+// const BASE_URL = 'http://localhost:7890';
 
 // TODO user sign up also signs in
 
@@ -20,11 +21,10 @@ export async function authUser({ email, password, type }) {
       },
     });
     const resp = await response.json();
-    // return resp;
-    if (resp.status === 500) {
-      throw new Error('this email already has an account');
+    if (response.ok) {
+      return await signIn({ email, password });
     } else {
-      return await resp;
+      throw new Error(resp.message);
     }
   } else if (type === 'sign-in') {
     response = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
@@ -47,6 +47,33 @@ export async function authUser({ email, password, type }) {
     } else {
       return await resp;
     }
+  }
+}
+
+async function signIn({ email, password }) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/v1/users/sessions`, {
+      method: 'POST',
+      credentials: 'include',
+      mode: 'cors',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers: {
+        'Content-type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+    const resp = await response.json();
+    // return resp;
+    if (resp.status === 401) {
+      throw new Error('wrong password, try again');
+    } else {
+      return await resp;
+    }
+  } catch (e) {
+    return null;
   }
 }
 
