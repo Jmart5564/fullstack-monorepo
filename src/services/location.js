@@ -1,4 +1,5 @@
 const BASE_URL = '';
+// const BASE_URL = 'http://localhost:7890';
 
 export async function getLocations() {
   try {
