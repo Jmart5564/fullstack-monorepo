@@ -6,8 +6,6 @@ import { authUser } from '../../services/auth.js';
 import styled from 'styled-components';
 import backgroundImg from '../../mushrooms.jpg';
 
-// TODO Sign up does not give a cookie, only sign in
-
 export default function Auth() {
   const { type } = useParams();
   const [email, setEmail] = useState('');
@@ -43,8 +41,24 @@ export default function Auth() {
       <AuthDiv>
         <h1>Forager Journal</h1>
         <div>
-          <Link to="/auth/sign-in">Sign In</Link>
-          <Link to="/auth/sign-up">Sign Up</Link>
+          {type === 'sign-in' ? (
+            <Link style={{ fontSize: 20 }} to="/auth/sign-in">
+              Sign In
+            </Link>
+          ) : (
+            <Link style={{ fontSize: 13 }} to="/auth/sign-in">
+              Sign In
+            </Link>
+          )}
+          {type === 'sign-up' ? (
+            <Link style={{ fontSize: 20 }} to="/auth/sign-up">
+              Sign Up
+            </Link>
+          ) : (
+            <Link style={{ fontSize: 13 }} to="/auth/sign-up">
+              Sign Up
+            </Link>
+          )}
         </div>
         <InputDiv>
           <label>Email</label>
@@ -88,7 +102,7 @@ const AuthDiv = styled.div`
   width: 350px;
   height: 350px;
   gap: 20px;
-  background-color: tan;
+  background-color: rgba(145, 117, 96, 1);
   box-shadow: 0px 9px 30px 0px rgba(167, 132, 82, 0.3);
   a:link {
     text-decoration: none;
@@ -119,5 +133,6 @@ const AuthDiv = styled.div`
   }
   button {
     font-size: 15px;
+    margin-bottom: 21px;
   }
 `;
