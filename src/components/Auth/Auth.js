@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext.js';
 import { authUser } from '../../services/auth.js';
 import styled from 'styled-components';
+import backgroundImg from '../../mushrooms.jpg';
 
 // TODO Sign up does not give a cookie, only sign in
 
@@ -38,24 +39,23 @@ export default function Auth() {
   }, [loading, user, navigate]);
 
   return (
-    <AuthPageDiv>
-      <div>
-        <h1>Forager Journal</h1>
-      </div>
+    <AuthPageDiv style={{ backgroundImage: `url(${backgroundImg})` }}>
       <AuthDiv>
+        <h1>Forager Journal</h1>
         <div>
           <Link to="/auth/sign-in">Sign In</Link>
           <Link to="/auth/sign-up">Sign Up</Link>
         </div>
-        <div>
-          <label>Email:</label>
+        <InputDiv>
+          <label>Email</label>
           <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </div>
-        <div>
-          <label>Password:</label>
+        </InputDiv>
+        <InputDiv>
+          <label>Password</label>
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </div>
-        <button onClick={submitAuth}>Submit</button>
+        </InputDiv>
+        {type === 'sign-in' ? <button onClick={submitAuth}>Sign In</button> : null}
+        {type === 'sign-up' ? <button onClick={submitAuth}>Sign Up</button> : null}
       </AuthDiv>
     </AuthPageDiv>
   );
@@ -68,6 +68,14 @@ const AuthPageDiv = styled.div`
   justify-content: center;
   gap: 20px;
   align-items: center;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+`;
+
+const InputDiv = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const AuthDiv = styled.div`
@@ -80,6 +88,8 @@ const AuthDiv = styled.div`
   width: 350px;
   height: 350px;
   gap: 20px;
+  background-color: tan;
+  box-shadow: 0px 9px 30px 0px rgba(167, 132, 82, 0.3);
   a:link {
     text-decoration: none;
     padding: 15px 15px;
@@ -94,6 +104,7 @@ const AuthDiv = styled.div`
     font-size: 25px;
     text-decoration: underline;
     font-weight: 500;
+    color: red;
   }
   input {
     width: 200px;
@@ -103,7 +114,10 @@ const AuthDiv = styled.div`
     border-radius: 5px;
     border: 1px solid rgb(220, 220, 220);
     &:focus {
-      border: 2px solid rgba(0, 206, 158, 1);
+      border: 2px solid rgba(0, 0, 0, 1);
     }
+  }
+  button {
+    font-size: 15px;
   }
 `;
