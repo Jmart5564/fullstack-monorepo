@@ -1,7 +1,5 @@
-const BASE_URL = '';
-// const BASE_URL = 'http://localhost:7890';
-
-// TODO user sign up also signs in
+// const BASE_URL = '';
+const BASE_URL = 'http://localhost:7890';
 
 export async function authUser({ email, password, type }) {
   let response;
@@ -24,6 +22,7 @@ export async function authUser({ email, password, type }) {
     if (response.ok) {
       return await signIn({ email, password });
     } else {
+      alert('This email already has an account, please sign in');
       throw new Error(resp.message);
     }
   } else if (type === 'sign-in') {
@@ -43,6 +42,7 @@ export async function authUser({ email, password, type }) {
     const resp = await response.json();
     // return resp;
     if (resp.status === 401) {
+      alert('Wrong Password, Please Try Again');
       throw new Error('wrong password, try again');
     } else {
       return await resp;
